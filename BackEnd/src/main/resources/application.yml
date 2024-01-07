@@ -1,0 +1,10 @@
+spring:
+  db:
+    hikari:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://sumitsfm.postgres.database.azure.com:5432/tsopdev
+      username: svc_tsop_svr
+      password: secudium12#$
+      minimumIdle: 30
+      maximumPoolSize: 30
+      connectionTestQuery: select 1
