@@ -21,6 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { useRouter } from 'src/routes/hooks';
 
 function createData(id, name, calories, fat, carbs, protein) {
   return {
@@ -233,6 +234,8 @@ export default function BoardList() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const router = useRouter();
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -265,6 +268,10 @@ export default function BoardList() {
       );
     }
     setSelected(newSelected);
+  };
+
+  const handleDoubleClick = (event, id) => {
+    router.push('/dashboard/board/'+id)
   };
 
   const handleChangePage = (event, newPage) => {
@@ -322,6 +329,7 @@ export default function BoardList() {
                   <TableRow
                     hover
                     onClick={(event) => handleClick(event, row.id)}
+                    onDoubleClick={(event) => handleDoubleClick(event, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
