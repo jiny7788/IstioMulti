@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jiny.backend.user.map.UserMapper">
+<mapper namespace="com.jiny.backend.map.UserMapper">
 
-    <select id="getUserList" resultType="com.jiny.backend.user.dto.UserDto">
+    <select id="getUserList" resultType="com.jiny.backend.dto.UserDto">
         select
             company_cd, tenant_id, bld_id, user_id, user_name
         from tsopdev.co_user

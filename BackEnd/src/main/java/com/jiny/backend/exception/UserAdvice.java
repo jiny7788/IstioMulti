@@ -1,6 +1,6 @@
-package com.jiny.backend.user.exception;
+package com.jiny.backend.exception;
 
-import com.jiny.backend.user.dto.CommonResponse;
+import com.jiny.backend.dto.CommonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
-package com.jiny.backend.user.svc;
+package com.jiny.backend.svc;
 
-import com.jiny.backend.user.dto.CommonResponse;
-import com.jiny.backend.user.map.UserMapper;
+import com.jiny.backend.dto.CommonResponse;
+import com.jiny.backend.map.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

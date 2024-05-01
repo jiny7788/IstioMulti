@@ -1,7 +1,7 @@
-package com.jiny.backend.user.ctl;
+package com.jiny.backend.ctl;
 
-import com.jiny.backend.user.dto.CommonResponse;
-import com.jiny.backend.user.svc.UserService;
+import com.jiny.backend.dto.CommonResponse;
+import com.jiny.backend.svc.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

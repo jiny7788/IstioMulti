@@ -1,4 +1,4 @@
-package com.jiny.backend.user.dto;
+package com.jiny.backend.dto;
 
 import lombok.Data;
 
