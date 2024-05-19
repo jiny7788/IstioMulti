@@ -2,7 +2,7 @@ spring:
   db:
     hikari:
       driver-class-name: org.postgresql.Driver
-      jdbc-url: jdbc:postgresql://sumitsfm.postgres.database.azure.com:5432/test
+      jdbc-url: jdbc:postgresql://sumitsfm.postgres.database.azure.com:5432/tsopdev
       username: svc_tsop_svr
       password: secudium12#$
       minimumIdle: 30

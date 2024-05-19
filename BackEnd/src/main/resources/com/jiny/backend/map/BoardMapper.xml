@@ -14,11 +14,11 @@
 			updatedtime,
 			likes,
 			counts
-        FROM mytest.tb_board
+        FROM test.tb_board
     </select>
 
     <insert id="save" parameterType="com.jiny.backend.dto.BoardDto">
-        INSERT into mytest.tb_board
+        INSERT into test.tb_board
             (board_type, title, contents, memberno, createdtime, likes, counts)
         values
             (#{type}, #{title}, #{contents}, #{memberNo}::BIGINT, now(), 0::BIGINT, 0::BIGINT)
@@ -35,12 +35,12 @@
 			updatedtime,
 			likes,
 			counts
-        FROM mytest.tb_board
+        FROM test.tb_board
         WHERE board_no = #{no}::BIGINT
     </select>
 
     <update id="update" parameterType="com.jiny.backend.dto.BoardDto">
-        UPDATE mytest.tb_board set
+        UPDATE test.tb_board set
                                    board_type = #{type},
                                    title = #{title},
                                    contents = #{contents},
@@ -49,14 +49,14 @@
     </update>
 
     <delete id="delete" parameterType="com.jiny.backend.dto.BoardDto">
-        DELETE from  mytest.tb_board
+        DELETE from  test.tb_board
         WHERE board_no = #{no}::BIGINT
     </delete>
 
     <select id="count" resultType="Integer">
         SELECT
             count(*)
-        FROM mytest.tb_board
+        FROM test.tb_board
     </select>
 
     <select id="findFromTo" resultType="com.jiny.backend.dto.BoardDto">
@@ -70,7 +70,7 @@
 			updatedtime,
 			likes,
 			counts
-        FROM mytest.tb_board
+        FROM test.tb_board
         ORDER BY board_no DESC
         OFFSET #{startNum} LIMIT #{countPerPage}
     </select>

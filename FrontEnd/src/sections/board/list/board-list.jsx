@@ -22,33 +22,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { useRouter } from 'src/routes/hooks';
+import BoardService from '../../../apis/BoardService';
 
-function createData(id, name, calories, fat, carbs, protein) {
+function createData(id, board_type, title, member_no, reg_date, like_cnt, view_cnt) {
   return {
-    id,
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
+    id, board_type, title, member_no, reg_date, like_cnt, view_cnt,
   };
 }
 
-const rows = [
-  createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-  createData(2, 'Donut', 452, 25.0, 51, 4.9),
-  createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-  createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-  createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-  createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-  createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-  createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-  createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-  createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-  createData(13, 'Oreo', 437, 18.0, 63, 4.0),
-];
+// const rows = [
+//   createData(1, '자유게시판', '테스트1', 0, '2024-05-19 10:31:40', 0, 0),
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -84,34 +68,46 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'id',
+    numeric: true,
+    disablePadding: false,
+    label: '번호',
+  },
+  {
+    id: 'board_type',
     numeric: false,
-    disablePadding: true,
-    label: 'Dessert (100g serving)',
+    disablePadding: false,
+    label: '타입',
   },
   {
-    id: 'calories',
-    numeric: true,
+    id: 'title',
+    numeric: false,
     disablePadding: false,
-    label: 'Calories',
+    label: '제목',
   },
   {
-    id: 'fat',
+    id: 'member_no',
     numeric: true,
     disablePadding: false,
-    label: 'Fat (g)',
+    label: '작성자번호',
   },
   {
-    id: 'carbs',
-    numeric: true,
+    id: 'reg_date',
+    numeric: false,
     disablePadding: false,
-    label: 'Carbs (g)',
+    label: '작성일',
   },
   {
-    id: 'protein',
+    id: 'like_cnt',
     numeric: true,
     disablePadding: false,
-    label: 'Protein (g)',
+    label: '좋아요',
+  },
+  {
+    id: 'view_cnt',
+    numeric: true,
+    disablePadding: false,
+    label: '조회',
   },
 ];
 
@@ -228,13 +224,26 @@ EnhancedTableToolbar.propTypes = {
 
 export default function BoardList() {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rows, setRows] = React.useState([]);
 
   const router = useRouter();
+
+  React.useEffect(() => {
+  BoardService.getBoards(1).then((res) => {
+    setRows(res.data.list.map( row => createData(row.no, row.type, row.title, row.memberNo, row.createdTime, row.likes, row.counts)));
+  });
+
+  return () => {
+
+    };
+  }, []);
+
+  
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -293,14 +302,14 @@ export default function BoardList() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage,
-      ),
-    [order, orderBy, page, rowsPerPage],
-  );
+  // const visibleRows = React.useMemo(
+  //   () =>
+  //     stableSort(rows, getComparator(order, orderBy)).slice(
+  //       page * rowsPerPage,
+  //       page * rowsPerPage + rowsPerPage,
+  //     ),
+  //   [order, orderBy, page, rowsPerPage],
+  // );
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -321,7 +330,7 @@ export default function BoardList() {
               rowCount={rows.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
+              {rows.map((row, index) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -352,12 +361,14 @@ export default function BoardList() {
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {row.id}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{row.board_type}</TableCell>
+                    <TableCell align="right">{row.title}</TableCell>
+                    <TableCell align="right">{row.member_no}</TableCell>
+                    <TableCell align="right">{row.reg_date}</TableCell>
+                    <TableCell align="right">{row.like_cnt}</TableCell>
+                    <TableCell align="right">{row.view_cnt}</TableCell>
                   </TableRow>
                 );
               })}

@@ -7,14 +7,30 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import BoardService from '../../../apis/BoardService';
+
 
 export default function BoardRead() {
     const { no } = useParams();
-    const [type, setType] = useState("1");
+    const [type, setType] = useState("자유게시판");
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
-    const [memberNo, setMebmerNo] = useState(1);
+    const [memberNo, setMebmerNo] = useState(0);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (no) {
+            BoardService.getOneBoard(no).then((res) => {
+                let board = res.data;
+                setType(board.type);
+                setTitle(board.title);
+                setContents(board.contents);
+                setMebmerNo(board.memberNo);
+            });
+        }
+    }
+    , [no]);
+
 
     const handleTypeChange = (event) => {
         setType(event.target.value);
@@ -38,13 +54,15 @@ export default function BoardRead() {
         console.log("board => " + JSON.stringify(board));
 
         if (!no) {
-            //BoardService.createBoard(board).then((res) => {
+            BoardService.createBoard(board).then((res) => {
+                console.log("createBoard => " + JSON.stringify(res.data));
                 navigate(`/dashboard/board`);
-            //});
+            });
         } else {
-            //BoardService.updateBoard(no, board).then((res) => {
+            BoardService.updateBoard(no, board).then((res) => {
+                console.log("updateBoard => " + JSON.stringify(res.data));
                 navigate(`/dashboard/board`);
-            //});
+            });
         }
     }
 
@@ -64,8 +82,8 @@ export default function BoardRead() {
                     label="Board Type"
                     onChange={handleTypeChange}
                 >
-                    <MenuItem value={"1"}>자유게시판</MenuItem>
-                    <MenuItem value={"2"}>질문과 답변</MenuItem>
+                    <MenuItem value={"자유게시판"}>자유게시판</MenuItem>
+                    <MenuItem value={"질문과 답변"}>질문과 답변</MenuItem>
                 </Select>
             </Box>
             <Box sx={{ mt: 3 }}>
@@ -79,7 +97,7 @@ export default function BoardRead() {
                 />
             </Box>
             <Box sx={{ mt: 3 }}>
-                Text Editor
+                {contents}
             </Box>
             <Box sx={{ mt: 3 }}>
                 <Button variant="contained" onClick={createBoard} >저장</Button>{" "}
