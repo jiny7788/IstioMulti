@@ -1,44 +1,42 @@
-import { Component } from 'react'
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 
-class TextEditor extends Component {
-    render() {
-        const {value, onChange, readOnly} = this.props;
-        const custom_config = {
-            ...Editor.defaultConfig,
-            htmlSupport: {                  // html tag들이 filtering되지 않도록 설정한다. 
-                allow: [
-                  {
-                    name: /.*/,
-                    attributes: true,
-                    classes: true,
-                    styles: true
-                  }
-                ]
-            },
-           extraPlugins: [ MyCustomUploadAdapterPlugin ],   // image 파일 upload를 위한 custom upload 등록
-        };
+export default function TextEditor({value, onChange, readOnly}) {
+    
+    const custom_config = {
+        ...Editor.defaultConfig,
+        htmlSupport: {                  // html tag들이 filtering되지 않도록 설정한다. 
+            allow: [
+                {
+                name: /.*/,
+                attributes: true,
+                classes: true,
+                styles: true
+                }
+            ]
+        },
+        extraPlugins: [ MyCustomUploadAdapterPlugin ],   // image 파일 upload를 위한 custom upload 등록
+    };
 
-        //console.log(custom_config);
+    //console.log(custom_config);
 
-        return (
-            <CKEditor
-                required
-                editor={Editor}
-                config={custom_config}
-                data={value}
-                onChange={(event, editor) => {
-                    onChange(editor.getData());
-                }}
-                onReady={(editor) => {
-                    if(readOnly) 
-                        editor.enableReadOnlyMode( 'my-feature-id' );
-                }}
-            />
-        )
-    }
+    return (
+        <CKEditor
+            required
+            editor={Editor}
+            config={custom_config}
+            data={value}
+            onChange={(event, editor) => {
+                onChange(editor.getData());
+            }}
+            onReady={(editor) => {
+                if(readOnly) 
+                    editor.enableReadOnlyMode( 'my-feature-id' );
+            }}
+        />
+    )
 }
+
 
 function MyCustomUploadAdapterPlugin(editor) {
     editor.plugins.get( 'FileRepository' ).createUploadAdapter = (loader) => {
@@ -50,7 +48,7 @@ class MyUploadAdapter {
       constructor(props) {
         this.loader = props;
         // URL where to send files.
-        this.url = `http://localhost:8094/fileserver/fileUpload`;
+        this.url = `http://localhost:8080/api/fileUpload`;
       }
   
       // Starts the upload process.
@@ -121,6 +119,4 @@ class MyUploadAdapter {
           )
       }
   
-  }
-
-export default TextEditor;
+}
