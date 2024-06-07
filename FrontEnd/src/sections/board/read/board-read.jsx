@@ -40,35 +40,30 @@ export default function BoardRead() {
         setTitle(event.target.value);
     }
 
-    const onChange = (data) => {
-        setContents(data);
-        //console.log("onChange => " + data);
+    const goToList = () => {
+        navigate(`/dashboard/board`);
     }
 
-    const createBoard = () => {
-        let board = {
-            type: type,
-            title: title,
-            contents: contents,
-            memberNo: memberNo,
-        };
-        console.log("board => " + JSON.stringify(board));
+    const goToUpdate = () => {
+        navigate(`/dashboard/boardwrite/${no}`);
+    }
 
-        if (!no) {
-            BoardService.createBoard(board).then((res) => {
-                console.log("createBoard => " + JSON.stringify(res.data));
-                navigate(`/dashboard/board`);
-            });
-        } else {
-            BoardService.updateBoard(no, board).then((res) => {
-                console.log("updateBoard => " + JSON.stringify(res.data));
-                navigate(`/dashboard/board`);
+    const deleteView = () => {
+        if (
+            window.confirm(
+              "정말로 글을 삭제하시겠습니까?\n삭제된 글은 복구 할 수 없습니다."
+            )
+          ) {
+            BoardService.deleteBoard(no).then((res) => {
+                if(res.status === 200) {
+                    console.log("deleteBoard => " + JSON.stringify(res.data));
+                    navigate(`/dashboard/board`);
+                } else {
+                    console.log("deleteBoard error => " + JSON.stringify(res.data));
+                    alert("글 삭제에 실패하였습니다.");
+                }
             });
         }
-    }
-
-    const cancel = () => {
-        navigate(`/dashboard/board`);
     }
 
     return (
@@ -98,11 +93,14 @@ export default function BoardRead() {
                 />
             </Box>
             <Box sx={{ mt: 3 }}>
-                <TextEditor value={contents} onChange={onChange} readOnly={false}/>
+                <TextEditor value={contents} readOnly={true}/>
             </Box>
             <Box sx={{ mt: 3 }}>
-                <Button variant="contained" onClick={createBoard} >저장</Button>{" "}
-                <Button variant="outlined" onClick={cancel}>취소</Button>
+                <Container maxWidth={false}>
+                    <Button variant="outlined" onClick={() => goToList() }>글 목록으로 이동</Button>{" "}
+                    <Button variant="outlined" onClick={() => goToUpdate() }>글 수정</Button>{" "}
+                    <Button variant="outlined" onClick={() => deleteView()}>글 삭제</Button>     
+                </Container>          
             </Box>
         </Container>
         </>
