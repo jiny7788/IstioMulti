@@ -40,6 +40,11 @@ export default function BoardRead() {
         setTitle(event.target.value);
     }
 
+    const onChange = (data) => {
+        setContents(data);
+        //console.log("onChange => " + data);
+    }
+
     const goToList = () => {
         navigate(`/dashboard/board`);
     }
@@ -93,7 +98,7 @@ export default function BoardRead() {
                 />
             </Box>
             <Box sx={{ mt: 3 }}>
-                <TextEditor value={contents} readOnly={true}/>
+                <TextEditor value={contents} onChange={onChange} readOnly={true}/>
             </Box>
             <Box sx={{ mt: 3 }}>
                 <Container maxWidth={false}>
