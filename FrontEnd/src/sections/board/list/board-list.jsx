@@ -19,6 +19,7 @@ import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { useRouter } from 'src/routes/hooks';
@@ -69,7 +70,7 @@ function stableSort(array, comparator) {
 const headCells = [
   {
     id: 'id',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: '번호',
   },
@@ -100,13 +101,13 @@ const headCells = [
   {
     id: 'like_cnt',
     numeric: true,
-    disablePadding: false,
+    disablePadding: true,
     label: '좋아요',
   },
   {
     id: 'view_cnt',
     numeric: true,
-    disablePadding: false,
+    disablePadding: true,
     label: '조회',
   },
 ];
@@ -169,6 +170,12 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected } = props;
+  const router = useRouter();
+
+  const createBoard = () => {    
+    router.push('/dashboard/boardwrite');
+  }
+  
 
   return (
     <Toolbar
@@ -208,9 +215,9 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
+        <Tooltip title="Add">
+          <IconButton onClick={createBoard}>
+            <AddIcon />
           </IconButton>
         </Tooltip>
       )}
@@ -360,13 +367,14 @@ export default function BoardList() {
                       id={labelId}
                       scope="row"
                       padding="none"
+                      align="center"
                     >
                       {row.id}
                     </TableCell>
-                    <TableCell align="right">{row.board_type}</TableCell>
-                    <TableCell align="right">{row.title}</TableCell>
-                    <TableCell align="right">{row.member_no}</TableCell>
-                    <TableCell align="right">{row.reg_date}</TableCell>
+                    <TableCell align="left">{row.board_type}</TableCell>
+                    <TableCell align="left">{row.title}</TableCell>
+                    <TableCell align="center">{row.member_no}</TableCell>
+                    <TableCell align="left">{row.reg_date}</TableCell>
                     <TableCell align="right">{row.like_cnt}</TableCell>
                     <TableCell align="right">{row.view_cnt}</TableCell>
                   </TableRow>
