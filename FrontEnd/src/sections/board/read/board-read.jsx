@@ -46,11 +46,11 @@ export default function BoardRead(props) {
     }
 
     const goToList = () => {
-        navigate(`/dashboard/board`);
+        navigate(`/dashboard/board/${pageno}`);
     }
 
     const goToUpdate = () => {
-        navigate(`/dashboard/boardwrite/${no}`);
+        navigate(`/dashboard/boardwrite/${no}/${pageno}`);
     }
 
     const deleteView = () => {

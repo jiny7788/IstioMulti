@@ -11,7 +11,7 @@ import BoardService from '../../../apis/BoardService';
 import TextEditor from '../../../components/text-editor/TextEditor';
 
 export default function BoardWrite() {
-    const { no } = useParams();
+    const { no, pageno } = useParams();
     const [type, setType] = useState("자유게시판");
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
@@ -59,13 +59,16 @@ export default function BoardWrite() {
             });
         } else {
             BoardService.updateBoard(no, board).then((res) => {
-                navigate("/dashboard/board");
+                navigate(`/dashboard/board/${pageno}`);
             });
         }
     }
 
     const cancel = () => {
-        navigate("/dashboard/board");
+        if(!no)
+            navigate("/dashboard/board");
+        else
+            navigate(`/dashboard/board/${pageno}`);
     }
 
     return (

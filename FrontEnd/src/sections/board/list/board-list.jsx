@@ -195,7 +195,7 @@ export default function BoardList(props) {
   const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [pageInfo, setPageInfo] = React.useState({
     p_num: pageno,
@@ -267,8 +267,7 @@ export default function BoardList(props) {
   };
 
   const handleDoubleClick = (event, id) => {
-  //  console.log(`/dashboard/boardread/${id}&${pageInfo.p_num}`);
-    router.push(`/dashboard/boardread/${id}`);
+    router.push(`/dashboard/boardread/${id}/${pageInfo.p_num}`);
   };
 
   const handleChangePage = (event, newPage) => {
