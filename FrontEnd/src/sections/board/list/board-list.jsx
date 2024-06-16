@@ -25,48 +25,6 @@ import { visuallyHidden } from '@mui/utils';
 import { useRouter } from 'src/routes/hooks';
 import BoardService from '../../../apis/BoardService';
 
-function createData(id, board_type, title, member_no, reg_date, like_cnt, view_cnt) {
-  return {
-    id, board_type, title, member_no, reg_date, like_cnt, view_cnt,
-  };
-}
-
-// const rows = [
-//   createData(1, '자유게시판', '테스트1', 0, '2024-05-19 10:31:40', 0, 0),
-// ];
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
 const headCells = [
   {
     id: 'id',
@@ -229,28 +187,50 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function BoardList() {
+export default function BoardList(props) {
+  let {pageno} = props;
+  if(pageno === undefined) pageno = 1;
+
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rows, setRows] = React.useState([]);
+  const [pageInfo, setPageInfo] = React.useState({
+    p_num: pageno,
+    paging: {
+      "currentPageNum": 1,
+      "objectCountTotal": 37,
+      "objectCountPerPage": 5,
+      "objectStartNum": 0,
+      "objectEndNum": 15,
+      "pageNumCountTotal": 1,
+      "pageNumCountPerPage": 10,
+      "pageNumStart": 1,
+      "pageNumEnd": 3,
+      "prev": false,
+      "next": true
+    },
+    boards: [],
+  }); 
 
   const router = useRouter();
 
   React.useEffect(() => {
-  BoardService.getBoards(1).then((res) => {
-    setRows(res.data.list.map( row => createData(row.no, row.type, row.title, row.memberNo, row.createdTime, row.likes, row.counts)));
-  });
+    BoardService.getBoards(pageInfo.p_num, pageInfo.paging.objectCountPerPage).then((res) => {
+      console.log(res.data);
+      setPageInfo({
+        p_num: res.data.pagingData.currentPageNum,
+        paging: res.data.pagingData,
+        boards: res.data.list,
+      });
+    });
 
   return () => {
 
     };
   }, []);
-
-  
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -260,7 +240,7 @@ export default function BoardList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = pageInfo.boards.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -287,16 +267,32 @@ export default function BoardList() {
   };
 
   const handleDoubleClick = (event, id) => {
-    router.push('/dashboard/board/'+id)
+  //  console.log(`/dashboard/boardread/${id}&${pageInfo.p_num}`);
+    router.push(`/dashboard/boardread/${id}`);
   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    BoardService.getBoards(newPage+1, pageInfo.paging.objectCountPerPage).then((res) => {
+      setPageInfo({
+        p_num: res.data.pagingData.currentPageNum,
+        paging: res.data.pagingData,
+        boards: res.data.list,
+      });
+    });
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    const count_per_page = parseInt(event.target.value, 10);
+    setRowsPerPage(count_per_page);
     setPage(0);
+    BoardService.getBoards(1, count_per_page).then((res) => {
+      setPageInfo({
+        p_num: res.data.pagingData.currentPageNum,
+        paging: res.data.pagingData,
+        boards: res.data.list,
+      });
+    });
   };
 
   const handleChangeDense = (event) => {
@@ -307,16 +303,7 @@ export default function BoardList() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  // const visibleRows = React.useMemo(
-  //   () =>
-  //     stableSort(rows, getComparator(order, orderBy)).slice(
-  //       page * rowsPerPage,
-  //       page * rowsPerPage + rowsPerPage,
-  //     ),
-  //   [order, orderBy, page, rowsPerPage],
-  // );
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - pageInfo.boards.length) : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -334,22 +321,21 @@ export default function BoardList() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={pageInfo.boards.length}
             />
             <TableBody>
-              {rows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
+              {pageInfo.boards.map((item, index) => {
+                const isItemSelected = isSelected(item.no);
                 const labelId = `enhanced-table-checkbox-${index}`;
-
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
-                    onDoubleClick={(event) => handleDoubleClick(event, row.id)}
+                    onClick={(event) => handleClick(event, item.no)}
+                    onDoubleClick={(event) => handleDoubleClick(event, item.no)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={item.no}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -369,14 +355,14 @@ export default function BoardList() {
                       padding="none"
                       align="center"
                     >
-                      {row.id}
+                      {item.no}
                     </TableCell>
-                    <TableCell align="left">{row.board_type}</TableCell>
-                    <TableCell align="left">{row.title}</TableCell>
-                    <TableCell align="center">{row.member_no}</TableCell>
-                    <TableCell align="left">{row.reg_date}</TableCell>
-                    <TableCell align="right">{row.like_cnt}</TableCell>
-                    <TableCell align="right">{row.view_cnt}</TableCell>
+                    <TableCell align="left">{item.type}</TableCell>
+                    <TableCell align="left">{item.title}</TableCell>
+                    <TableCell align="center">{item.memberNo}</TableCell>
+                    <TableCell align="left">{item.createdTime}</TableCell>
+                    <TableCell align="right">{item.likes}</TableCell>
+                    <TableCell align="right">{item.counts}</TableCell>
                   </TableRow>
                 );
               })}
@@ -395,9 +381,9 @@ export default function BoardList() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={pageInfo.paging.objectCountTotal}
           rowsPerPage={rowsPerPage}
-          page={page}
+          page={pageInfo.p_num-1}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />

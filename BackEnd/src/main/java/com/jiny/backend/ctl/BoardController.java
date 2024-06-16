@@ -32,10 +32,11 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping(value = "/board")
-    public ResponseEntity<Map> getBoardList(@RequestParam(value = "p_num", required = false) Integer p_num) {
+    public ResponseEntity<Map> getBoardList(@RequestParam(value = "p_num", required = false) Integer p_num, @RequestParam(value = "count_per_page", required = false) Integer count_per_page) {
         if(p_num == null || p_num <= 0) p_num = 1;
+        if(count_per_page == null || count_per_page <= 0) count_per_page = 5;
 
-        return boardService.getBoardList(p_num);
+        return boardService.getBoardList(p_num, count_per_page);
     }
 
     @PostMapping("/board")
@@ -87,7 +88,7 @@ public class BoardController {
         }
     }
 
-    public String rootPath = Paths.get("~/upload-dir").toString();
+    public String rootPath = Paths.get("/Users/skinfosec/upload-dir").toString();
     public String uploadCKEditorFile(MultipartFile multipartFile, String subPath) throws Exception {
         // 파일 업로드 경로 생성
         String savePath = Paths.get(rootPath, subPath).toString();

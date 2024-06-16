@@ -24,10 +24,10 @@ public class BoardService {
         return boardMapper.count();
     }
 
-    public ResponseEntity<Map> getBoardList(Integer p_num) {
+    public ResponseEntity<Map> getBoardList(Integer p_num, Integer count_per_page) {
         Map result = null;
 
-        PagingUtil pu = new PagingUtil(p_num, 5, 5); // ($1:표시할 현재 페이지, $2:한페이지에 표시할 글 수, $3:한 페이지에 표시할 페이지 버튼의 수 )
+        PagingUtil pu = new PagingUtil(p_num, count_per_page, 5); // ($1:표시할 현재 페이지, $2:한페이지에 표시할 글 수, $3:한 페이지에 표시할 페이지 버튼의 수 )
         List<BoardDto> list = boardMapper.findFromTo(pu.getObjectStartNum(), pu.getObjectCountPerPage());
         pu.setObjectCountTotal(findAllCount());
         pu.setCalcForPaging();

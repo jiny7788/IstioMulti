@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
@@ -10,8 +10,8 @@ import Button from '@mui/material/Button';
 import BoardService from '../../../apis/BoardService';
 import TextEditor from '../../../components/text-editor/TextEditor';
 
-export default function BoardRead() {
-    const { no } = useParams();
+export default function BoardRead(props) {
+    let {no, pageno} = props;
     const [type, setType] = useState("자유게시판");
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");

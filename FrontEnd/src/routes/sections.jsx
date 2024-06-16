@@ -33,7 +33,8 @@ export default function Router() {
       children: [
         { element: <IndexPage />, index: true },
         { path: 'board', element: <BoardPage /> },
-        { path: 'board/:no', element: <BoardReadPage /> },
+        { path: 'board/:pageno', element: <BoardPage /> },
+        { path: 'boardread/:no', element: <BoardReadPage /> },
         { path: 'boardwrite', element: <BoardWritePage /> }, 
         { path: 'boardwrite/:no', element: <BoardWritePage /> },        
         { path: 'user', element: <UserPage /> },
