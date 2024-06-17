@@ -162,7 +162,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          No selected
         </Typography>
       )}
 
@@ -240,7 +240,7 @@ export default function BoardList(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = pageInfo.boards.map((n) => n.id);
+      const newSelected = pageInfo.boards.map((n) => n.no);
       setSelected(newSelected);
       return;
     }
