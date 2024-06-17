@@ -20,7 +20,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { useRouter } from 'src/routes/hooks';
 import BoardService from '../../../apis/BoardService';
@@ -127,13 +126,33 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, selected } = props;
   const router = useRouter();
 
   const createBoard = () => {    
     router.push('/dashboard/boardwrite');
   }
   
+  const deleteBoard = () => {
+    console.log(selected);
+    if (
+      window.confirm(
+        "정말로 글을 삭제하시겠습니까?\n삭제된 글은 복구 할 수 없습니다."
+      )
+    ) {
+      selected.map( (no) => {
+        BoardService.deleteBoard(no).then((res) => {
+          if(res.status === 200) {
+              console.log("deleteBoard => " + JSON.stringify(res.data));
+          } else {
+              console.log("deleteBoard error => " + JSON.stringify(res.data));
+              alert("글 삭제에 실패하였습니다.");
+          }
+        });
+      } );
+      router.reload();
+    }
+  }
 
   return (
     <Toolbar
@@ -168,7 +187,7 @@ function EnhancedTableToolbar(props) {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={deleteBoard}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -307,7 +326,7 @@ export default function BoardList(props) {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} selected={selected}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
