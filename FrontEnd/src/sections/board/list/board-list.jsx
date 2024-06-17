@@ -196,13 +196,13 @@ export default function BoardList(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [pageInfo, setPageInfo] = React.useState({
     p_num: pageno,
     paging: {
       "currentPageNum": 1,
       "objectCountTotal": 37,
-      "objectCountPerPage": 5,
+      "objectCountPerPage": 10,
       "objectStartNum": 0,
       "objectEndNum": 15,
       "pageNumCountTotal": 1,
@@ -302,7 +302,7 @@ export default function BoardList(props) {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - pageInfo.boards.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - pageInfo.objectCountTotal) : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
