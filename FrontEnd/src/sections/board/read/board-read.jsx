@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useRouter } from 'src/routes/hooks';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
@@ -16,7 +16,7 @@ export default function BoardRead(props) {
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
     const [memberNo, setMebmerNo] = useState(0);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     useEffect(() => {
         if (no) {
@@ -46,11 +46,11 @@ export default function BoardRead(props) {
     }
 
     const goToList = () => {
-        navigate(`/dashboard/board/${pageno}`);
+        router.push(`/dashboard/board/${pageno}`);
     }
 
     const goToUpdate = () => {
-        navigate(`/dashboard/boardwrite/${no}/${pageno}`);
+        router.push(`/dashboard/boardwrite/${no}/${pageno}`);
     }
 
     const deleteView = () => {
@@ -62,7 +62,7 @@ export default function BoardRead(props) {
             BoardService.deleteBoard(no).then((res) => {
                 if(res.status === 200) {
                     console.log("deleteBoard => " + JSON.stringify(res.data));
-                    navigate(`/dashboard/board`);
+                    router.push(`/dashboard/board`);
                 } else {
                     console.log("deleteBoard error => " + JSON.stringify(res.data));
                     alert("글 삭제에 실패하였습니다.");
@@ -95,6 +95,7 @@ export default function BoardRead(props) {
                     value={title}
                     onChange={handleTitleChange}
                     fullWidth 
+                    disabled
                 />
             </Box>
             <Box sx={{ mt: 3 }}>

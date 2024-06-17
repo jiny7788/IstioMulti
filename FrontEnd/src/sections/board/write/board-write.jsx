@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import BoardService from '../../../apis/BoardService';
 import TextEditor from '../../../components/text-editor/TextEditor';
+import { useRouter } from 'src/routes/hooks';
 
 export default function BoardWrite() {
     const { no, pageno } = useParams();
@@ -16,7 +17,7 @@ export default function BoardWrite() {
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
     const [memberNo, setMebmerNo] = useState(0);
-    const navigate = useNavigate();
+    const router = useRouter();
 
     useEffect(() => {
         if (no) {
@@ -55,20 +56,20 @@ export default function BoardWrite() {
 
         if (!no) {
             BoardService.createBoard(board).then((res) => {
-                navigate("/dashboard/board");
+                router.push("/dashboard/board");
             });
         } else {
             BoardService.updateBoard(no, board).then((res) => {
-                navigate(`/dashboard/board/${pageno}`);
+                router.push(`/dashboard/board/${pageno}`);
             });
         }
     }
 
     const cancel = () => {
         if(!no)
-            navigate("/dashboard/board");
+            router.push("/dashboard/board");
         else
-            navigate(`/dashboard/board/${pageno}`);
+            router.push(`/dashboard/board/${pageno}`);
     }
 
     return (
