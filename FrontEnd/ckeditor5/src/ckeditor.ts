@@ -9,12 +9,13 @@ import { Alignment } from '@ckeditor/ckeditor5-alignment';
 import { Autoformat } from '@ckeditor/ckeditor5-autoformat';
 import { Bold, Italic, Underline } from '@ckeditor/ckeditor5-basic-styles';
 import { BlockQuote } from '@ckeditor/ckeditor5-block-quote';
+import { CKBox } from '@ckeditor/ckeditor5-ckbox';
 import { CloudServices } from '@ckeditor/ckeditor5-cloud-services';
 import { CodeBlock } from '@ckeditor/ckeditor5-code-block';
 import type { EditorConfig } from '@ckeditor/ckeditor5-core';
 import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import { FontBackgroundColor, FontColor, FontFamily, FontSize } from '@ckeditor/ckeditor5-font';
-import { Heading, Title } from '@ckeditor/ckeditor5-heading';
+import { Heading } from '@ckeditor/ckeditor5-heading';
 import { Highlight } from '@ckeditor/ckeditor5-highlight';
 import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line';
 import {
@@ -25,7 +26,8 @@ import {
 	ImageResize,
 	ImageStyle,
 	ImageToolbar,
-	ImageUpload
+	ImageUpload,
+	PictureEditing
 } from '@ckeditor/ckeditor5-image';
 import { Indent, IndentBlock } from '@ckeditor/ckeditor5-indent';
 import { AutoLink, Link, LinkImage } from '@ckeditor/ckeditor5-link';
@@ -66,6 +68,7 @@ class Editor extends ClassicEditor {
 		Autoformat,
 		BlockQuote,
 		Bold,
+		CKBox,
 		CloudServices,
 		CodeBlock,
 		Essentials,
@@ -96,6 +99,7 @@ class Editor extends ClassicEditor {
 		PageBreak,
 		Paragraph,
 		PasteFromOffice,
+		PictureEditing,
 		SpecialCharacters,
 		SpecialCharactersArrows,
 		SpecialCharactersCurrency,
@@ -110,7 +114,6 @@ class Editor extends ClassicEditor {
 		TableProperties,
 		TableToolbar,
 		TextTransformation,
-		Title,
 		TodoList,
 		Underline,
 		Undo
@@ -121,32 +124,32 @@ class Editor extends ClassicEditor {
 			items: [
 				'heading',
 				'|',
-				'fontSize',
 				'fontColor',
 				'fontBackgroundColor',
+				'fontSize',
 				'fontFamily',
 				'bold',
 				'italic',
 				'underline',
 				'highlight',
+				'undo',
+				'redo',
 				'|',
-				'bulletedList',
-				'todoList',
-				'numberedList',
-				'outdent',
-				'indent',
-				'alignment',
+				'blockQuote',
 				'horizontalLine',
 				'pageBreak',
+				'bulletedList',
+				'todoList',
+				'outdent',
+				'numberedList',
+				'indent',
+				'alignment',
+				'insertTable',
 				'|',
 				'specialCharacters',
 				'link',
-				'blockQuote',
-				'insertTable',
 				'imageInsert',
-				'mediaEmbed',
-				'undo',
-				'redo'
+				'mediaEmbed'
 			]
 		},
 		language: 'ko',

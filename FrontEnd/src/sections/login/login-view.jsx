@@ -20,7 +20,6 @@ import { bgGradient } from 'src/theme/css';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 import { AuthContext } from '../../context/auth';
-import App from '../../App';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +34,6 @@ export default function LoginView() {
 
   const handleClick = () => {
     signIn();
-//    router.push('/dashboard');
     router.push('/')
   };
 
