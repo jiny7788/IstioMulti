@@ -3,11 +3,38 @@
 
 <mapper namespace="com.jiny.backend.map.UserMapper">
 
-    <select id="getUserList" resultType="com.jiny.backend.dto.UserDto">
+    <select id="getAllUsers" resultType="com.jiny.backend.dto.UserDto">
         select
-            company_cd, tenant_id, bld_id, user_id, user_name
-        from tsopdev.co_user
-        where user_id = 'jiny777'
+            user_id, user_name, user_password, login_datetime, use_yn
+        from test.tb_user
+        order by user_id
     </select>
+
+    <insert id="save" parameterType="com.jiny.backend.dto.UserDto">
+        insert into test.tb_user
+            (user_id, user_name, user_password, login_datetime, use_yn)
+        values
+            (#{userId}, #{userName}, #{userPassword}, now(), 'Y')
+    </insert>
+
+    <select id="findById" parameterType="String" resultType="com.jiny.backend.dto.UserDto">
+        select
+            user_id, user_name, user_password, login_datetime, use_yn
+        from test.tb_user
+        where user_id = #{userId}
+    </select>
+
+    <update id="update" parameterType="com.jiny.backend.dto.UserDto">
+        update test.tb_user set
+            user_name = #{userName},
+            user_password = #{userPassword},
+            login_datetime = now()
+        where user_id = #{userId}
+    </update>
+
+    <delete id="delete" parameterType="com.jiny.backend.dto.UserDto">
+        delete from test.tb_user
+        where user_id = #{userId}
+    </delete>
 
 </mapper>

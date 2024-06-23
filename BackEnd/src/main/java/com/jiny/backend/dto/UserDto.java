@@ -2,11 +2,13 @@ package com.jiny.backend.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class UserDto {
-    private String companyCd;
-    private String tenantId;
-    private String bldId;
     private String userId;
     private String userName;
+    private String userPassword;
+    private Date loginDatetime;
+    private String useYn;
 }
