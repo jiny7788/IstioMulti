@@ -151,7 +151,6 @@ function EnhancedTableToolbar(props) {
         });
       } );
       router.reload();
-      //router.push('/board');
     }
   }
 
