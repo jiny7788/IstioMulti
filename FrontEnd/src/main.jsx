@@ -4,17 +4,21 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
 import App from './App.jsx'
+import { AuthContextProvider } from './context/auth';
 
 // ----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <HelmetProvider>
-    <BrowserRouter>
-      <Suspense>
-        <App />
-      </Suspense>
-    </BrowserRouter>
-  </HelmetProvider>
+  <AuthContextProvider>
+    <HelmetProvider>
+      <BrowserRouter>
+        <Suspense>
+          <App />
+        </Suspense>
+      </BrowserRouter>
+    </HelmetProvider>ß
+  </AuthContextProvider>
+  
 );

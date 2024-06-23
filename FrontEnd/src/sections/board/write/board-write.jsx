@@ -56,20 +56,20 @@ export default function BoardWrite() {
 
         if (!no) {
             BoardService.createBoard(board).then((res) => {
-                router.push("/dashboard/board");
+                router.push("/board");
             });
         } else {
             BoardService.updateBoard(no, board).then((res) => {
-                router.push(`/dashboard/board/${pageno}`);
+                router.push(`/board/${pageno}`);
             });
         }
     }
 
     const cancel = () => {
         if(!no)
-            router.push("/dashboard/board");
+            router.push("/board");
         else
-            router.push(`/dashboard/board/${pageno}`);
+            router.push(`/board/${pageno}`);
     }
 
     return (

@@ -46,11 +46,11 @@ export default function BoardRead(props) {
     }
 
     const goToList = () => {
-        router.push(`/dashboard/board/${pageno}`);
+        router.push(`/board/${pageno}`);
     }
 
     const goToUpdate = () => {
-        router.push(`/dashboard/boardwrite/${no}/${pageno}`);
+        router.push(`/boardwrite/${no}/${pageno}`);
     }
 
     const deleteView = () => {
@@ -62,7 +62,7 @@ export default function BoardRead(props) {
             BoardService.deleteBoard(no).then((res) => {
                 if(res.status === 200) {
                     console.log("deleteBoard => " + JSON.stringify(res.data));
-                    router.push(`/dashboard/board`);
+                    router.push(`/board`);
                 } else {
                     console.log("deleteBoard error => " + JSON.stringify(res.data));
                     alert("글 삭제에 실패하였습니다.");

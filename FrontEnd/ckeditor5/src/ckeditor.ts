@@ -9,13 +9,12 @@ import { Alignment } from '@ckeditor/ckeditor5-alignment';
 import { Autoformat } from '@ckeditor/ckeditor5-autoformat';
 import { Bold, Italic, Underline } from '@ckeditor/ckeditor5-basic-styles';
 import { BlockQuote } from '@ckeditor/ckeditor5-block-quote';
-import { CKBox } from '@ckeditor/ckeditor5-ckbox';
 import { CloudServices } from '@ckeditor/ckeditor5-cloud-services';
 import { CodeBlock } from '@ckeditor/ckeditor5-code-block';
 import type { EditorConfig } from '@ckeditor/ckeditor5-core';
 import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import { FontBackgroundColor, FontColor, FontFamily, FontSize } from '@ckeditor/ckeditor5-font';
-import { Heading } from '@ckeditor/ckeditor5-heading';
+import { Heading, Title } from '@ckeditor/ckeditor5-heading';
 import { Highlight } from '@ckeditor/ckeditor5-highlight';
 import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line';
 import {
@@ -26,13 +25,14 @@ import {
 	ImageResize,
 	ImageStyle,
 	ImageToolbar,
-	ImageUpload,
-	PictureEditing
+	ImageUpload
 } from '@ckeditor/ckeditor5-image';
 import { Indent, IndentBlock } from '@ckeditor/ckeditor5-indent';
 import { AutoLink, Link, LinkImage } from '@ckeditor/ckeditor5-link';
-import { List, ListProperties } from '@ckeditor/ckeditor5-list';
-import { MediaEmbed } from '@ckeditor/ckeditor5-media-embed';
+import { List, ListProperties, TodoList } from '@ckeditor/ckeditor5-list';
+import { MediaEmbed, MediaEmbedToolbar } from '@ckeditor/ckeditor5-media-embed';
+import { Mention } from '@ckeditor/ckeditor5-mention';
+import { PageBreak } from '@ckeditor/ckeditor5-page-break';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
 import { PasteFromOffice } from '@ckeditor/ckeditor5-paste-from-office';
 import {
@@ -46,6 +46,7 @@ import {
 } from '@ckeditor/ckeditor5-special-characters';
 import {
 	Table,
+	TableCaption,
 	TableCellProperties,
 	TableColumnResize,
 	TableProperties,
@@ -65,7 +66,6 @@ class Editor extends ClassicEditor {
 		Autoformat,
 		BlockQuote,
 		Bold,
-		CKBox,
 		CloudServices,
 		CodeBlock,
 		Essentials,
@@ -91,9 +91,11 @@ class Editor extends ClassicEditor {
 		List,
 		ListProperties,
 		MediaEmbed,
+		MediaEmbedToolbar,
+		Mention,
+		PageBreak,
 		Paragraph,
 		PasteFromOffice,
-		PictureEditing,
 		SpecialCharacters,
 		SpecialCharactersArrows,
 		SpecialCharactersCurrency,
@@ -102,11 +104,14 @@ class Editor extends ClassicEditor {
 		SpecialCharactersMathematical,
 		SpecialCharactersText,
 		Table,
+		TableCaption,
 		TableCellProperties,
 		TableColumnResize,
 		TableProperties,
 		TableToolbar,
 		TextTransformation,
+		Title,
+		TodoList,
 		Underline,
 		Undo
 	];
@@ -116,27 +121,28 @@ class Editor extends ClassicEditor {
 			items: [
 				'heading',
 				'|',
-				'fontFamily',
 				'fontSize',
 				'fontColor',
 				'fontBackgroundColor',
+				'fontFamily',
 				'bold',
 				'italic',
 				'underline',
-				'horizontalLine',
 				'highlight',
 				'|',
-				'blockQuote',
-				'codeBlock',
-				'insertTable',
 				'bulletedList',
+				'todoList',
 				'numberedList',
-				'alignment',
 				'outdent',
 				'indent',
+				'alignment',
+				'horizontalLine',
+				'pageBreak',
 				'|',
 				'specialCharacters',
 				'link',
+				'blockQuote',
+				'insertTable',
 				'imageInsert',
 				'mediaEmbed',
 				'undo',

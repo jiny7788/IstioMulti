@@ -130,7 +130,7 @@ function EnhancedTableToolbar(props) {
   const router = useRouter();
 
   const createBoard = () => {    
-    router.push('/dashboard/boardwrite');
+    router.push('/boardwrite');
   }
   
   const deleteBoard = () => {
@@ -151,6 +151,7 @@ function EnhancedTableToolbar(props) {
         });
       } );
       router.reload();
+      //router.push('/board');
     }
   }
 
@@ -286,7 +287,7 @@ export default function BoardList(props) {
   };
 
   const handleDoubleClick = (event, id) => {
-    router.push(`/dashboard/boardread/${id}/${pageInfo.p_num}`);
+    router.push(`/boardread/${id}/${pageInfo.p_num}`);
   };
 
   const handleChangePage = (event, newPage) => {
