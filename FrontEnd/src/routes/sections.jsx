@@ -25,10 +25,6 @@ export default function Router() {
   if( auth ) {
     console.log('Login....');
     routes = useRoutes([
-      //{
-      //  path: '',
-      //   element: <LoginPage />,
-      //},
       {
         path: '',
         element: (
@@ -49,10 +45,6 @@ export default function Router() {
           { path: 'products', element: <ProductsPage /> },
           { path: 'blog', element: <BlogPage /> },
         ],
-      },
-      {
-        path: 'login',
-        element: <LoginPage />,
       },
       {
         path: '404',

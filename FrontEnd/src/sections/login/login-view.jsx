@@ -24,23 +24,32 @@ import { AuthContext } from '../../context/auth';
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
-  const {auth, setAuth, signIn, signOut} = useContext(AuthContext);
-
+  const {signIn} = useContext(AuthContext);
   const theme = useTheme();
-
   const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleClick = () => {
-    signIn();
+    signIn(id, password);
     router.push('/')
   };
+
+  const handleChange = (event) => {
+    event.preventDefault();
+    const {name, value} = event.target;
+    if (name === 'id') {
+      setId(value);
+    } else if (name === 'password') {
+      setPassword(value);
+    }
+  }
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField name="id" label="ID" onChange={handleChange}/>
 
         <TextField
           name="password"
@@ -55,6 +64,7 @@ export default function LoginView() {
               </InputAdornment>
             ),
           }}
+          onChange={handleChange}
         />
       </Stack>
 
@@ -111,45 +121,6 @@ export default function LoginView() {
               Get started
             </Link>
           </Typography>
-
-          <Stack direction="row" spacing={2}>
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:google-fill" color="#DF3E30" />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:facebook-fill" color="#1877F2" />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:twitter-fill" color="#1C9CEA" />
-            </Button>
-          </Stack>
-
-          <Divider sx={{ my: 3 }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              OR
-            </Typography>
-          </Divider>
-
           {renderForm}
         </Card>
       </Stack>
