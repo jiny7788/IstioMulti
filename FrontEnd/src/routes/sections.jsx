@@ -23,7 +23,7 @@ export default function Router() {
 
   
   if( auth ) {
-    console.log('Login....');
+//    console.log('Login....');
     routes = useRoutes([
       {
         path: '',
@@ -56,7 +56,7 @@ export default function Router() {
       },
     ]);
   } else {
-    console.log('Logout....');
+//    console.log('Logout....');
     routes = useRoutes([
       {
         path: '',

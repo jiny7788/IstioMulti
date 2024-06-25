@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import com.jiny.jwtauth.dto.CreateTokenDto;
+import com.jiny.jwtauth.dto.CommonResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +21,9 @@ public class UserService  {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public ResponseEntity<Map> getUserList() {
         Map result = null;
@@ -68,5 +74,44 @@ public class UserService  {
         int result = userMapper.delete(user);
 
         return ResponseEntity.ok(Map.of("success", result > 0));
+    }
+
+    public ResponseEntity<UserDto> login(UserDto user) {
+        UserDto result = null;
+        try {
+            result = userMapper.findById(user.getUserId());
+
+            // password check
+            if (result != null && result.getUserPassword().equals(user.getUserPassword())) {
+
+                CreateTokenDto dto = new CreateTokenDto();
+                dto.setClientIp("127.0.0.1");
+                dto.setExpired(30L);
+                dto.setPayload("{}");
+
+                ResponseEntity<CommonResponse> res = restTemplate.postForEntity("http://localhost:8081/auth/create/token", dto, CommonResponse.class);
+                //logger.info("Response : "+ res.getBody().getResponse());
+                HashMap<String, String> response = (HashMap<String, String>) res.getBody().getResponse();
+                String accessToken = response.get("accessToken");
+                String refreshToken = response.get("refreshToken");
+                //logger.info("accessToken : "+ accessToken);
+                //logger.info("refreshToken : "+ refreshToken);
+
+                result.setAccessToken(accessToken);
+                result.setRefreshToken(refreshToken);
+            } else {
+                logger.info("login failed {}", user);
+                result = null;
+            }
+        } catch (Exception e) {
+            logger.error("login error : {}", e);
+            result = null;
+        }
+
+        if(result == null) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
     }
 }

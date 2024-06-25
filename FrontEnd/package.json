@@ -22,6 +22,7 @@
     "@mui/material": "^5.15.15",
     "axios": "^1.6.8",
     "ckeditor5-custom-build": "file:ckeditor5",
+    "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "numeral": "^2.0.6",
     "react": "^18.2.0",
