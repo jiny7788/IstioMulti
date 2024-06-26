@@ -39,6 +39,9 @@ public class JwtService {
     @Value("${sumits.encryption.jwk-uri:http://localhost:8080/auth/jwks}")
     private String jwksUri;
 
+    @Value("${redis.use:0}")
+    int redisUse;
+
     private PublicKey publicKey = null;
     private PrivateKey privateKey = null;
 
@@ -161,11 +164,13 @@ public class JwtService {
             logger.error(e.toString());
         }
 
-        // Redis에 Key를 저장한다.
-        HashOperations<String, Object, Object> hashOperations = refreshTokenTemplate.opsForHash();
-        Map<String, Object> map = new HashMap<>();
-        map.put("refreshToken", jwt);
-        hashOperations.putAll(tokenId, map);
+        if(redisUse !=0) {
+            // Redis에 Key를 저장한다.
+            HashOperations<String, Object, Object> hashOperations = refreshTokenTemplate.opsForHash();
+            Map<String, Object> map = new HashMap<>();
+            map.put("refreshToken", jwt);
+            hashOperations.putAll(tokenId, map);
+        }
 
         return jwt;
     }

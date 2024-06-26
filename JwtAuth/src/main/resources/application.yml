@@ -8,6 +8,7 @@ redis:
   host: redis-master-cs
   port: 6379
   db: 1
+  use: 0
 
 sumits:
   encryption:

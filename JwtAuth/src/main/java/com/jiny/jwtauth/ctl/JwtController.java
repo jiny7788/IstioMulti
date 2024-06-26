@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,9 @@ public class JwtController {
 
     @Autowired
     RedisTemplate<String, Object> refreshTokenTemplate;
+
+    @Value("${redis.use:0}")
+    int redisUse;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtController.class);
 
@@ -115,13 +119,18 @@ public class JwtController {
                 if(dto.getClientIp().compareTo(clientIp) != 0) {
                     result = CommonResponse.fail("Invaild clientIp");
                 } else {
-                    // Redis에서 refreshToken을 가져와서 검증
-                    String refreshToken = (String) refreshTokenTemplate.opsForHash().get(tokenId, "refreshToken");
-                    logger.info("redisToken: " + refreshToken);
-                    if(refreshToken != null && dto.getRefreshToken() !=null && refreshToken.compareTo(dto.getRefreshToken()) == 0) {
+                    if(redisUse == 0) {
                         bVerified = true;
+                        logger.info("not use redisToken");
                     } else {
-                        result = CommonResponse.fail("Invaild refreshToken");
+                        // Redis에서 refreshToken을 가져와서 검증
+                        String refreshToken = (String) refreshTokenTemplate.opsForHash().get(tokenId, "refreshToken");
+                        logger.info("redisToken: " + refreshToken);
+                        if(refreshToken != null && dto.getRefreshToken() !=null && refreshToken.compareTo(dto.getRefreshToken()) == 0) {
+                            bVerified = true;
+                        } else {
+                            result = CommonResponse.fail("Invaild refreshToken");
+                        }
                     }
                 }
             }
@@ -173,11 +182,15 @@ public class JwtController {
             //String clientIp = (String) jsonObject.get("clientIp");
             String tokenId = (String) jsonObject.get("tokenId");
 
-            // Redis에서 refreshToken을 삭제한다
-            if( refreshTokenTemplate.delete(tokenId) ) {
+            if( redisUse == 0 ) {
                 result = CommonResponse.ok("success");
             } else {
-                result = CommonResponse.fail("Not found");
+                // Redis에서 refreshToken을 삭제한다
+                if (refreshTokenTemplate.delete(tokenId)) {
+                    result = CommonResponse.ok("success");
+                } else {
+                    result = CommonResponse.fail("Not found");
+                }
             }
         } catch(Exception e) {
             result = CommonResponse.fail(e);
