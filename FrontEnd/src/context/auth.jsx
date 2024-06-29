@@ -29,9 +29,7 @@ export const AuthContextProvider = ({children}) => {
         };
 
         UserService.login(user).then((res) => {
-            if (res.data.userPassword === base64) {
-            // 서버에서 이미 패스워드 비교를 해주기 때문에 꼭 비교는 안해줘도 되지만
-            // 그냥 확인 차원에서 한번 더 비교해줌
+            if (res.data.accessToken !== null && res.data.accessToken !== undefined) {
                 storage.set(res.data.accessToken);
                 refreshToken.set(res.data.refreshToken);
                 setAuth(true);
@@ -39,7 +37,7 @@ export const AuthContextProvider = ({children}) => {
                 storage.remove();
                 refreshToken.remove();
                 setAuth(false);                
-                alert('비밀번호가 일치하지 않습니다.');
+                alert('등록되지 않은 사용자이거나 비밀번호가 일치하지 않습니다.');
             }
         });
     };

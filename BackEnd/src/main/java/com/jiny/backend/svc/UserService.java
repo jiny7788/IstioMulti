@@ -98,6 +98,7 @@ public class UserService  {
                 //logger.info("accessToken : "+ accessToken);
                 //logger.info("refreshToken : "+ refreshToken);
 
+                result.setUserPassword("");     // password 정보는 클라이언트에게 전달하지 않는다.
                 result.setAccessToken(accessToken);
                 result.setRefreshToken(refreshToken);
             } else {
