@@ -32,11 +32,12 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping(value = "/board")
-    public ResponseEntity<Map> getBoardList(@RequestParam(value = "p_num", required = false) Integer p_num, @RequestParam(value = "count_per_page", required = false) Integer count_per_page) {
+    public ResponseEntity<Map> getBoardList(@RequestParam(value = "type", required = false) String type, @RequestParam(value = "p_num", required = false) Integer p_num, @RequestParam(value = "count_per_page", required = false) Integer count_per_page) {
         if(p_num == null || p_num <= 0) p_num = 1;
         if(count_per_page == null || count_per_page <= 0) count_per_page = 5;
+        if(type == null || type.equals("")) type = "default";   // 게시판 종류를 선택하지 않은 경우 default로 설정
 
-        return boardService.getBoardList(p_num, count_per_page);
+        return boardService.getBoardList(type, p_num, count_per_page);
     }
 
     @PostMapping("/board")

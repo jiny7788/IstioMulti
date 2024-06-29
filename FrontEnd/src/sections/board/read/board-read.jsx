@@ -11,8 +11,7 @@ import BoardService from '../../../apis/BoardService';
 import TextEditor from '../../../components/text-editor/TextEditor';
 
 export default function BoardRead(props) {
-    let {no, pageno} = props;
-    const [type, setType] = useState("자유게시판");
+    let {type, no, pageno} = props;
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
     const [memberNo, setMebmerNo] = useState(0);
@@ -22,7 +21,6 @@ export default function BoardRead(props) {
         if (no) {
             BoardService.getOneBoard(no).then((res) => {
                 let board = res.data;
-                setType(board.type);
                 setTitle(board.title);
                 setContents(board.contents);
                 setMebmerNo(board.memberNo);
@@ -30,11 +28,6 @@ export default function BoardRead(props) {
         }
     }
     , [no]);
-
-
-    const handleTypeChange = (event) => {
-        setType(event.target.value);
-    };
     
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
@@ -46,11 +39,11 @@ export default function BoardRead(props) {
     }
 
     const goToList = () => {
-        router.push(`/board/${pageno}`);
+        router.push(`/board/${type}/${pageno}`);
     }
 
     const goToUpdate = () => {
-        router.push(`/boardwrite/${no}/${pageno}`);
+        router.push(`/boardwrite/${type}/${no}/${pageno}`);
     }
 
     const deleteView = () => {
@@ -62,7 +55,7 @@ export default function BoardRead(props) {
             BoardService.deleteBoard(no).then((res) => {
                 if(res.status === 200) {
                     console.log("deleteBoard => " + JSON.stringify(res.data));
-                    router.push(`/board`);
+                    router.push(`/board/${type}`);
                 } else {
                     console.log("deleteBoard error => " + JSON.stringify(res.data));
                     alert("글 삭제에 실패하였습니다.");
@@ -74,19 +67,6 @@ export default function BoardRead(props) {
     return (
         <>
         <Container maxWidth="lg">
-            <Box sx={{ mt: 3 }}>
-                <InputLabel id="select-label">Board Type</InputLabel>
-                <Select
-                    labelId="select-label"
-                    id="select-label"
-                    value={type}
-                    label="Board Type"
-                    onChange={handleTypeChange}
-                >
-                    <MenuItem value={"자유게시판"}>자유게시판</MenuItem>
-                    <MenuItem value={"질문과 답변"}>질문과 답변</MenuItem>
-                </Select>
-            </Box>
             <Box sx={{ mt: 3 }}>
                 <TextField
                     required

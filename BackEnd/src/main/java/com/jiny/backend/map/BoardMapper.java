@@ -11,6 +11,6 @@ public interface BoardMapper {
     public int update(BoardDto board);
     public int delete(BoardDto board);
 
-    public int count();
-    public List<BoardDto> findFromTo(int startNum, int countPerPage);
+    public int count(String type);
+    public List<BoardDto> findFromTo(String type, int startNum, int countPerPage);
 }

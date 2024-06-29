@@ -20,16 +20,16 @@ public class BoardService {
     @Autowired
     private BoardMapper boardMapper;
 
-    public int findAllCount() {
-        return boardMapper.count();
+    public int findAllCount(String type) {
+        return boardMapper.count(type);
     }
 
-    public ResponseEntity<Map> getBoardList(Integer p_num, Integer count_per_page) {
+    public ResponseEntity<Map> getBoardList(String type, Integer p_num, Integer count_per_page) {
         Map result = null;
 
         PagingUtil pu = new PagingUtil(p_num, count_per_page, 5); // ($1:표시할 현재 페이지, $2:한페이지에 표시할 글 수, $3:한 페이지에 표시할 페이지 버튼의 수 )
-        List<BoardDto> list = boardMapper.findFromTo(pu.getObjectStartNum(), pu.getObjectCountPerPage());
-        pu.setObjectCountTotal(findAllCount());
+        List<BoardDto> list = boardMapper.findFromTo(type, pu.getObjectStartNum(), pu.getObjectCountPerPage());
+        pu.setObjectCountTotal(findAllCount(type));
         pu.setCalcForPaging();
 
         System.out.println("p_num : "+p_num);

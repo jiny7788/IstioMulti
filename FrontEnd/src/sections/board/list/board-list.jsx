@@ -126,13 +126,13 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, selected } = props;
+  const { type, numSelected, selected } = props;
   const router = useRouter();
 
-  const createBoard = () => {    
-    router.push('/boardwrite');
+  const createBoard = () => {
+    router.push(`/boardwrite/${type}`);
   }
-  
+
   const deleteBoard = () => {
     console.log(selected);
     if (
@@ -140,16 +140,16 @@ function EnhancedTableToolbar(props) {
         "정말로 글을 삭제하시겠습니까?\n삭제된 글은 복구 할 수 없습니다."
       )
     ) {
-      selected.map( (no) => {
+      selected.map((no) => {
         BoardService.deleteBoard(no).then((res) => {
-          if(res.status === 200) {
-              console.log("deleteBoard => " + JSON.stringify(res.data));
+          if (res.status === 200) {
+            console.log("deleteBoard => " + JSON.stringify(res.data));
           } else {
-              console.log("deleteBoard error => " + JSON.stringify(res.data));
-              alert("글 삭제에 실패하였습니다.");
+            console.log("deleteBoard error => " + JSON.stringify(res.data));
+            alert("글 삭제에 실패하였습니다.");
           }
         });
-      } );
+      });
       router.reload();
     }
   }
@@ -207,8 +207,10 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function BoardList(props) {
-  let {pageno} = props;
-  if(pageno === undefined) pageno = 1;
+//  console.log(props);
+  
+  let { type, pageno } = props;
+  if (pageno === undefined) pageno = 1;
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('id');
@@ -217,6 +219,7 @@ export default function BoardList(props) {
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [pageInfo, setPageInfo] = React.useState({
+    type: type,
     p_num: pageno,
     paging: {
       "currentPageNum": 1,
@@ -232,21 +235,22 @@ export default function BoardList(props) {
       "next": true
     },
     boards: [],
-  }); 
+  });
 
   const router = useRouter();
 
   React.useEffect(() => {
-    BoardService.getBoards(pageInfo.p_num, pageInfo.paging.objectCountPerPage).then((res) => {
-      console.log(res.data);
+    BoardService.getBoards(pageInfo.type, pageInfo.p_num, pageInfo.paging.objectCountPerPage).then((res) => {
+      //console.log(res.data);
       setPageInfo({
+        type: type,
         p_num: res.data.pagingData.currentPageNum,
         paging: res.data.pagingData,
         boards: res.data.list,
       });
     });
 
-  return () => {
+    return () => {
 
     };
   }, []);
@@ -286,12 +290,12 @@ export default function BoardList(props) {
   };
 
   const handleDoubleClick = (event, id) => {
-    router.push(`/boardread/${id}/${pageInfo.p_num}`);
+    router.push(`/boardread/${pageInfo.type}/${id}/${pageInfo.p_num}`);
   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    BoardService.getBoards(newPage+1, pageInfo.paging.objectCountPerPage).then((res) => {
+    BoardService.getBoards(pageInfo.type, newPage + 1, pageInfo.paging.objectCountPerPage).then((res) => {
       setPageInfo({
         p_num: res.data.pagingData.currentPageNum,
         paging: res.data.pagingData,
@@ -304,7 +308,7 @@ export default function BoardList(props) {
     const count_per_page = parseInt(event.target.value, 10);
     setRowsPerPage(count_per_page);
     setPage(0);
-    BoardService.getBoards(1, count_per_page).then((res) => {
+    BoardService.getBoards(pageInfo.type, 1, count_per_page).then((res) => {
       setPageInfo({
         p_num: res.data.pagingData.currentPageNum,
         paging: res.data.pagingData,
@@ -326,7 +330,7 @@ export default function BoardList(props) {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} selected={selected}/>
+        <EnhancedTableToolbar type={pageInfo.type} numSelected={selected.length} selected={selected} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -401,7 +405,7 @@ export default function BoardList(props) {
           component="div"
           count={pageInfo.paging.objectCountTotal}
           rowsPerPage={rowsPerPage}
-          page={pageInfo.p_num-1}
+          page={pageInfo.p_num - 1}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />

@@ -26,6 +26,9 @@ public class UserService  {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${interface.auth.url}")
+    private String authUrl;
+
     public ResponseEntity<Map> getUserList() {
         Map result = null;
 
@@ -90,7 +93,7 @@ public class UserService  {
                 dto.setExpired(30L);
                 dto.setPayload("{}");
 
-                ResponseEntity<CommonResponse> res = restTemplate.postForEntity("http://localhost:8081/auth/create/token", dto, CommonResponse.class);
+                ResponseEntity<CommonResponse> res = restTemplate.postForEntity(authUrl, dto, CommonResponse.class);
                 //logger.info("Response : "+ res.getBody().getResponse());
                 HashMap<String, String> response = (HashMap<String, String>) res.getBody().getResponse();
                 String accessToken = response.get("accessToken");

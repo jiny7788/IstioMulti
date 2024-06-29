@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 export default function BoardReadPage() {
-  const { no, pageno } = useParams();
+  const { type, no, pageno } = useParams();
 
   return (
     <>
@@ -13,7 +13,7 @@ export default function BoardReadPage() {
         <title> Library Board | Jiny's FrontEnd Study Site </title>
       </Helmet>
 
-      <BoardRead no={no} pageno={pageno}/>
+      <BoardRead type={type} no={no} pageno={pageno}/>
     </>
   );
 }

@@ -13,8 +13,13 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'board',
-    path: '/board',
+    title: 'freeboard',
+    path: '/board/default',
+    icon: icon('ic_library'),
+  },
+  {
+    title: 'noticeboard',
+    path: '/board/notice',
     icon: icon('ic_library'),
   },
   {

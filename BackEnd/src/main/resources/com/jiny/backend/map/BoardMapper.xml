@@ -8,7 +8,7 @@
             board_no as no,
 			board_type as type,
 			title,
-			contents,
+--			contents,
 			memberno,
 			createdtime,
 			updatedtime,
@@ -57,6 +57,7 @@
         SELECT
             count(*)
         FROM test.tb_board
+        WHERE board_type = #{type}
     </select>
 
     <select id="findFromTo" resultType="com.jiny.backend.dto.BoardDto">
@@ -64,13 +65,14 @@
             board_no as no,
 			board_type as type,
 			title,
-			contents,
+--			contents,
 			memberno,
 			createdtime,
 			updatedtime,
 			likes,
 			counts
         FROM test.tb_board
+        WHERE board_type = #{type}
         ORDER BY board_no DESC
         OFFSET #{startNum} LIMIT #{countPerPage}
     </select>

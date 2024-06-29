@@ -12,8 +12,7 @@ import TextEditor from '../../../components/text-editor/TextEditor';
 import { useRouter } from 'src/routes/hooks';
 
 export default function BoardWrite() {
-    const { no, pageno } = useParams();
-    const [type, setType] = useState("자유게시판");
+    const { type, no, pageno } = useParams();
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
     const [memberNo, setMebmerNo] = useState(0);
@@ -23,7 +22,6 @@ export default function BoardWrite() {
         if (no) {
             BoardService.getOneBoard(no).then((res) => {
                 let board = res.data;
-                setType(board.type);
                 setTitle(board.title);
                 setContents(board.contents);
                 setMebmerNo(board.memberNo);
@@ -31,10 +29,6 @@ export default function BoardWrite() {
         }
     }
     , [no]);
-
-    const handleTypeChange = (event) => {
-        setType(event.target.value);
-    }
 
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
@@ -56,32 +50,25 @@ export default function BoardWrite() {
 
         if (!no) {
             BoardService.createBoard(board).then((res) => {
-                router.push("/board");
+                router.push(`/board/${type}`);
             });
         } else {
             BoardService.updateBoard(no, board).then((res) => {
-                router.push(`/board/${pageno}`);
+                router.push(`/board/${type}/${pageno}`);
             });
         }
     }
 
     const cancel = () => {
         if(!no)
-            router.push("/board");
+            router.push(`/board/${type}`);
         else
-            router.push(`/board/${pageno}`);
+            router.push(`/board/${type}/${pageno}`);
     }
 
     return (
         <>
         <Container>
-            <Box>
-                <InputLabel>게시판 종류</InputLabel>
-                <Select value={type} onChange={handleTypeChange}>
-                    <MenuItem value="자유게시판">자유게시판</MenuItem>
-                    <MenuItem value="질문과 답변">질문과 답변</MenuItem>
-                </Select>
-            </Box>
             <Box>
                 <TextField
                     label="제목"

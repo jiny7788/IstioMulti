@@ -8,3 +8,7 @@ spring:
       minimumIdle: 30
       maximumPoolSize: 30
       connectionTestQuery: select 1
+
+interface:
+  auth:
+    url: http://localhost:8081/auth/create/token
