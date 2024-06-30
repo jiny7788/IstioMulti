@@ -33,12 +33,6 @@ const headCells = [
     label: '번호',
   },
   {
-    id: 'board_type',
-    numeric: false,
-    disablePadding: false,
-    label: '타입',
-  },
-  {
     id: 'title',
     numeric: false,
     disablePadding: false,
@@ -46,7 +40,7 @@ const headCells = [
   },
   {
     id: 'member_no',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: '작성자번호',
   },
@@ -375,7 +369,6 @@ export default function BoardList(props) {
                     >
                       {item.no}
                     </TableCell>
-                    <TableCell align="left">{item.type}</TableCell>
                     <TableCell align="left">{item.title}</TableCell>
                     <TableCell align="center">{item.memberNo}</TableCell>
                     <TableCell align="left">{item.createdTime}</TableCell>
