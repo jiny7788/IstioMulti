@@ -23,6 +23,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { visuallyHidden } from '@mui/utils';
 import { useRouter } from 'src/routes/hooks';
 import BoardService from '../../../apis/BoardService';
+import { set } from 'date-fns';
 
 const headCells = [
   {
@@ -134,7 +135,6 @@ function EnhancedTableToolbar(props) {
   }
 
   const deleteBoard = () => {
-    console.log(selected);
     if (
       window.confirm(
         "정말로 글을 삭제하시겠습니까?\n삭제된 글은 복구 할 수 없습니다."
@@ -207,8 +207,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function BoardList(props) {
-//  console.log(props);
-  
+
   let { type, pageno } = props;
   if (pageno === undefined) pageno = 1;
 
@@ -219,7 +218,6 @@ export default function BoardList(props) {
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [pageInfo, setPageInfo] = React.useState({
-    type: type,
     p_num: pageno,
     paging: {
       "currentPageNum": 1,
@@ -240,10 +238,8 @@ export default function BoardList(props) {
   const router = useRouter();
 
   React.useEffect(() => {
-    BoardService.getBoards(pageInfo.type, pageInfo.p_num, pageInfo.paging.objectCountPerPage).then((res) => {
-      //console.log(res.data);
-      setPageInfo({
-        type: type,
+    BoardService.getBoards(type, pageInfo.p_num, pageInfo.paging.objectCountPerPage).then((res) => {
+\      setPageInfo({
         p_num: res.data.pagingData.currentPageNum,
         paging: res.data.pagingData,
         boards: res.data.list,
@@ -253,7 +249,7 @@ export default function BoardList(props) {
     return () => {
 
     };
-  }, []);
+  }, [type]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -290,12 +286,12 @@ export default function BoardList(props) {
   };
 
   const handleDoubleClick = (event, id) => {
-    router.push(`/boardread/${pageInfo.type}/${id}/${pageInfo.p_num}`);
+    router.push(`/boardread/${type}/${id}/${pageInfo.p_num}`);
   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    BoardService.getBoards(pageInfo.type, newPage + 1, pageInfo.paging.objectCountPerPage).then((res) => {
+    BoardService.getBoards(type, newPage + 1, pageInfo.paging.objectCountPerPage).then((res) => {
       setPageInfo({
         p_num: res.data.pagingData.currentPageNum,
         paging: res.data.pagingData,
@@ -308,7 +304,7 @@ export default function BoardList(props) {
     const count_per_page = parseInt(event.target.value, 10);
     setRowsPerPage(count_per_page);
     setPage(0);
-    BoardService.getBoards(pageInfo.type, 1, count_per_page).then((res) => {
+    BoardService.getBoards(type, 1, count_per_page).then((res) => {
       setPageInfo({
         p_num: res.data.pagingData.currentPageNum,
         paging: res.data.pagingData,
@@ -330,7 +326,7 @@ export default function BoardList(props) {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar type={pageInfo.type} numSelected={selected.length} selected={selected} />
+        <EnhancedTableToolbar type={type} numSelected={selected.length} selected={selected} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
