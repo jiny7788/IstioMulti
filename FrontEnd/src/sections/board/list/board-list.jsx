@@ -239,7 +239,7 @@ export default function BoardList(props) {
 
   React.useEffect(() => {
     BoardService.getBoards(type, pageInfo.p_num, pageInfo.paging.objectCountPerPage).then((res) => {
-\      setPageInfo({
+      setPageInfo({
         p_num: res.data.pagingData.currentPageNum,
         paging: res.data.pagingData,
         boards: res.data.list,
