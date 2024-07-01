@@ -31,14 +31,14 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: '번호',
-    width: '10%',
+    width: '5%',
   },
   {
     id: 'title',
     numeric: false,
     disablePadding: false,
     label: '제목',
-    width: '45%',
+    width: '40%',
   },
   {
     id: 'member_no',
@@ -52,7 +52,14 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: '작성일',
-    width: '20%',
+    width: '15%',
+  },
+  {
+    id: 'update_date',
+    numeric: false,
+    disablePadding: false,
+    label: '수정일',
+    width: '15%',
   },
   {
     id: 'like_cnt',
@@ -101,18 +108,7 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
             width={headCell.width}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
           </TableCell>
         ))}
       </TableRow>
@@ -379,14 +375,25 @@ export default function BoardList(props) {
                       scope="row"
                       padding="none"
                       align="center"
-                      width="10%"
+                      width="5%"
                     >
                       {item.no}
                     </TableCell>
-                    <TableCell align="left" width="45%">{item.title}</TableCell>
-                    <TableCell align="center" width="5%">{item.writer}</TableCell>
-                    <TableCell align="center" width="20%">{
+                    <TableCell align="left" width="40%">{item.title}</TableCell>
+                    <TableCell align="center" width="10%">{item.writer}</TableCell>
+                    <TableCell align="center" width="15%">{
                       new Date(item.createdTime).toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                      }).replace(/\./g, '-').replace(/ /, ' ').replace(/:/g, ':')}
+                    </TableCell>
+                    <TableCell align="center" width="15%">{
+                      new Date(item.updatedTime).toLocaleString('ko-KR', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',

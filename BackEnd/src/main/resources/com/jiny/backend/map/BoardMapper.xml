@@ -19,9 +19,9 @@
 
     <insert id="save" parameterType="com.jiny.backend.dto.BoardDto">
         INSERT into test.tb_board
-            (board_type, title, contents, writer, createdtime, likes, counts)
+            (board_type, title, contents, writer, createdtime, updatedTime, likes, counts)
         values
-            (#{type}, #{title}, #{contents}, #{writer}, now(), 0::BIGINT, 0::BIGINT)
+            (#{type}, #{title}, #{contents}, #{writer}, now(), now(), 0::BIGINT, 0::BIGINT)
     </insert>
 
     <select id="findById" parameterType="Integer" resultType="com.jiny.backend.dto.BoardDto">
