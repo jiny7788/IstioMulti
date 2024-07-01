@@ -9,7 +9,7 @@
 			board_type as type,
 			title,
 --			contents,
-			memberno,
+			writer,
 			createdtime,
 			updatedtime,
 			likes,
@@ -19,9 +19,9 @@
 
     <insert id="save" parameterType="com.jiny.backend.dto.BoardDto">
         INSERT into test.tb_board
-            (board_type, title, contents, memberno, createdtime, likes, counts)
+            (board_type, title, contents, writer, createdtime, likes, counts)
         values
-            (#{type}, #{title}, #{contents}, #{memberNo}::BIGINT, now(), 0::BIGINT, 0::BIGINT)
+            (#{type}, #{title}, #{contents}, #{writer}, now(), 0::BIGINT, 0::BIGINT)
     </insert>
 
     <select id="findById" parameterType="Integer" resultType="com.jiny.backend.dto.BoardDto">
@@ -30,7 +30,7 @@
 			board_type as type,
 			title,
 			contents,
-			memberno,
+			writer,
 			createdtime,
 			updatedtime,
 			likes,
@@ -66,7 +66,7 @@
 			board_type as type,
 			title,
 --			contents,
-			memberno,
+			writer,
 			createdtime,
 			updatedtime,
 			likes,

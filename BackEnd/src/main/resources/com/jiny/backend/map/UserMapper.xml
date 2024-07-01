@@ -5,21 +5,21 @@
 
     <select id="getAllUsers" resultType="com.jiny.backend.dto.UserDto">
         select
-            user_id, user_name, user_password, login_datetime, use_yn
+            user_id, user_name, user_password, login_datetime, use_yn, is_admin
         from test.tb_user
         order by user_id
     </select>
 
     <insert id="save" parameterType="com.jiny.backend.dto.UserDto">
         insert into test.tb_user
-            (user_id, user_name, user_password, login_datetime, use_yn)
+            (user_id, user_name, user_password, login_datetime, use_yn, is_admin)
         values
-            (#{userId}, #{userName}, #{userPassword}, now(), 'Y')
+            (#{userId}, #{userName}, #{userPassword}, now(), 'Y', #{isAdmin})
     </insert>
 
     <select id="findById" parameterType="String" resultType="com.jiny.backend.dto.UserDto">
         select
-            user_id, user_name, user_password, login_datetime, use_yn
+            user_id, user_name, user_password, login_datetime, use_yn, is_admin
         from test.tb_user
         where user_id = #{userId}
     </select>
@@ -28,7 +28,8 @@
         update test.tb_user set
             user_name = #{userName},
             user_password = #{userPassword},
-            login_datetime = now()
+            login_datetime = now(),
+            is_admin = #{isAdmin}
         where user_id = #{userId}
     </update>
 

@@ -18,12 +18,12 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { visuallyHidden } from '@mui/utils';
 import { useRouter } from 'src/routes/hooks';
 import BoardService from '../../../apis/BoardService';
-import { set } from 'date-fns';
+import Iconify from 'src/components/iconify';
+import { AuthContext } from '../../../context/auth';
 
 const headCells = [
   {
@@ -31,40 +31,47 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: '번호',
+    width: '10%',
   },
   {
     id: 'title',
     numeric: false,
     disablePadding: false,
     label: '제목',
+    width: '45%',
   },
   {
     id: 'member_no',
     numeric: false,
     disablePadding: false,
-    label: '작성자번호',
+    label: '작성자',
+    width: '10%',
   },
   {
     id: 'reg_date',
     numeric: false,
     disablePadding: false,
     label: '작성일',
+    width: '20%',
   },
   {
     id: 'like_cnt',
     numeric: true,
     disablePadding: true,
     label: '좋아요',
+    width: '5%',
   },
   {
     id: 'view_cnt',
     numeric: true,
     disablePadding: true,
     label: '조회',
+    width: '5%',
   },
 ];
 
 function EnhancedTableHead(props) {
+  const {userId, isAdmin}  = React.useContext(AuthContext);
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
@@ -74,7 +81,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        <TableCell padding="checkbox" width="5%">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -83,14 +90,16 @@ function EnhancedTableHead(props) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
+            disabled={!isAdmin}            
           />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align={headCell.numeric ? 'center' : 'center'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            width={headCell.width}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -121,6 +130,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
+  const {userId, isAdmin}  = React.useContext(AuthContext);
   const { type, numSelected, selected } = props;
   const router = useRouter();
 
@@ -179,10 +189,10 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {isAdmin && numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton onClick={deleteBoard}>
-            <DeleteIcon />
+            <Iconify icon="eva:trash-2-fill" />
           </IconButton>
         </Tooltip>
       ) : (
@@ -205,6 +215,7 @@ export default function BoardList(props) {
   let { type, pageno } = props;
   if (pageno === undefined) pageno = 1;
 
+  const {userId, isAdmin}  = React.useContext(AuthContext);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
@@ -233,6 +244,7 @@ export default function BoardList(props) {
 
   React.useEffect(() => {
     BoardService.getBoards(type, pageInfo.p_num, pageInfo.paging.objectCountPerPage).then((res) => {
+//      console.log("getBoards => " + JSON.stringify(res.data));
       setPageInfo({
         p_num: res.data.pagingData.currentPageNum,
         paging: res.data.pagingData,
@@ -351,13 +363,14 @@ export default function BoardList(props) {
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding="checkbox">
+                    <TableCell padding="checkbox" width="5%">
                       <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
                           'aria-labelledby': labelId,
-                        }}
+                        }}                        
+                        disabled={!isAdmin}
                       />
                     </TableCell>
                     <TableCell
@@ -366,14 +379,25 @@ export default function BoardList(props) {
                       scope="row"
                       padding="none"
                       align="center"
+                      width="10%"
                     >
                       {item.no}
                     </TableCell>
-                    <TableCell align="left">{item.title}</TableCell>
-                    <TableCell align="center">{item.memberNo}</TableCell>
-                    <TableCell align="left">{item.createdTime}</TableCell>
-                    <TableCell align="right">{item.likes}</TableCell>
-                    <TableCell align="right">{item.counts}</TableCell>
+                    <TableCell align="left" width="45%">{item.title}</TableCell>
+                    <TableCell align="center" width="5%">{item.writer}</TableCell>
+                    <TableCell align="center" width="20%">{
+                      new Date(item.createdTime).toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                      }).replace(/\./g, '-').replace(/ /, ' ').replace(/:/g, ':')}
+                    </TableCell>
+                    <TableCell align="center" width="5%">{item.likes}</TableCell>
+                    <TableCell align="center" width="5%">{item.counts}</TableCell>
                   </TableRow>
                 );
               })}

@@ -9,7 +9,7 @@ public class BoardDto {
     private String type;
     private String title;
     private String contents;
-    private Integer memberNo;
+    private String writer;
     private Date createdTime;
     private Date updatedTime;
     private Integer likes;

@@ -1,21 +1,19 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import {useParams} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import BoardService from '../../../apis/BoardService';
 import TextEditor from '../../../components/text-editor/TextEditor';
 import { useRouter } from 'src/routes/hooks';
+import { AuthContext } from '../../../context/auth';
 
 export default function BoardWrite() {
+    const {userId}  = useContext(AuthContext);
     const { type, no, pageno } = useParams();
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
-    const [memberNo, setMebmerNo] = useState(0);
     const router = useRouter();
 
     useEffect(() => {
@@ -24,7 +22,6 @@ export default function BoardWrite() {
                 let board = res.data;
                 setTitle(board.title);
                 setContents(board.contents);
-                setMebmerNo(board.memberNo);
             });
         }
     }
@@ -44,9 +41,8 @@ export default function BoardWrite() {
             type: type,
             title: title,
             contents: contents,
-            memberNo: memberNo,
+            writer: userId,
         };
-        console.log("board => " + JSON.stringify(board));
 
         if (!no) {
             BoardService.createBoard(board).then((res) => {

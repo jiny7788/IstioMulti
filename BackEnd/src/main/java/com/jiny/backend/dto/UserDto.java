@@ -11,6 +11,7 @@ public class UserDto {
     private String userPassword;
     private Date loginDatetime;
     private String useYn;
+    private String isAdmin;
     private String accessToken;
     private String refreshToken;
 }

@@ -1,20 +1,19 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import { useRouter } from 'src/routes/hooks';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import BoardService from '../../../apis/BoardService';
 import TextEditor from '../../../components/text-editor/TextEditor';
+import { AuthContext } from '../../../context/auth';
 
 export default function BoardRead(props) {
     let {type, no, pageno} = props;
+    const {userId}  = useContext(AuthContext);
     const [title, setTitle] = useState("");
     const [contents, setContents] = useState("");
-    const [memberNo, setMebmerNo] = useState(0);
+    const [writer, setWriter] = useState("");
     const router = useRouter();
 
     useEffect(() => {
@@ -23,7 +22,7 @@ export default function BoardRead(props) {
                 let board = res.data;
                 setTitle(board.title);
                 setContents(board.contents);
-                setMebmerNo(board.memberNo);
+                setWriter(board.writer);
             });
         }
     }
@@ -43,10 +42,20 @@ export default function BoardRead(props) {
     }
 
     const goToUpdate = () => {
+        if (writer !== userId) {
+            alert("작성자만 수정할 수 있습니다.");
+            return;        
+        }
+
         router.push(`/boardwrite/${type}/${no}/${pageno}`);
     }
 
     const deleteView = () => {
+        if (writer !== userId) {
+            alert("작성자만 삭제할 수 있습니다.");
+            return;
+        }
+
         if (
             window.confirm(
               "정말로 글을 삭제하시겠습니까?\n삭제된 글은 복구 할 수 없습니다."
