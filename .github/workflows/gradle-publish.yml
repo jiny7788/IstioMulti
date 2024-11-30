@@ -47,6 +47,6 @@ jobs:
           ECR_REPOSITORY: jwtauth
           IMAGE_TAG: ${{ github.run_number }}
         run: |
-          gradle bootJar
+          gradle JwtAuth:bootJar
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG JwtAuth
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
